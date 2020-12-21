@@ -6,6 +6,17 @@ use PHPUnit\Framework\TestCase;
 class ItemTest extends TestCase {
 
     private $item;
+    private $toLongText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been 
+        the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and 
+        scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into 
+        electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of 
+        Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus 
+        PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+        the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and 
+        scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into 
+        electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of 
+        Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus 
+        PageMaker including versions of Lorem Ipsum.";
 
     protected function setUp(): void
     {
@@ -33,7 +44,8 @@ class ItemTest extends TestCase {
 
     public function testIsNotValidDueToContentToLong()
     {
-        $this->item->setContent('');
+
+        $this->item->setContent($this->toLongText);
         $this->assertArrayHasKey("content", $this->item->isValid());
     }
 
@@ -44,20 +56,11 @@ class ItemTest extends TestCase {
             "content" => "Content invalid"
         ];
 
-        $toLongText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been 
-        the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and 
-        scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into 
-        electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of 
-        Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus 
-        PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-        the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and 
-        scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into 
-        electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of 
-        Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus 
-        PageMaker including versions of Lorem Ipsum.";
-
         $this->item->setName("");
-        $this->item->setContent($toLongText);
-        $this->assertEquals($errorsExpected, $this->item->isValid());
+        $this->item->setContent($this->toLongText);
+
+        $this->assertEquals($errorsExpected , $this->item->isValid());
     }
+
+
 }

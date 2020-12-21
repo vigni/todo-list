@@ -91,6 +91,7 @@ class Item
     public function isValid()
     {
         $errors = [];
+
         if (empty($this->name)) {
             $errors["name"] = "Name empty";
         }
@@ -98,6 +99,7 @@ class Item
             $errors["content"] = "Content invalid";
         }
         if (!empty($errors)) {
+
             return $errors;
         }
         else {

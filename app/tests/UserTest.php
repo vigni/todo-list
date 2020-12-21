@@ -9,7 +9,14 @@ class UserTest extends TestCase
 
     protected function setUp(): void 
     {
-        $this->user = new User("lucas", "vigni", "email@gmail.com", new \DateTime("1998-06-20"), "correctpassword");
+        $this->user = new User();
+
+        $this->user->setFirstName("lucas")
+            ->setLastName("vigni")
+            ->setBirthdate(new \DateTime("1998-06-20"))
+            ->setEmail("email@gmail.com")
+            ->setPassword("correctpassword");
+
         parent::setUp();
     }
 
@@ -56,7 +63,12 @@ class UserTest extends TestCase
 
     public function testIsNotValidWithFullError()
     {
-        $invalidUser= new User("", "", "email.com", new \DateTime("2015-06-20"), "pwd");
+        $this->user->setFirstName("")
+            ->setLastName("")
+            ->setBirthdate(new \DateTime("2015-06-20"))
+            ->setEmail("email.com")
+            ->setPassword("pwd");
+
         $errorsExpected = [
             "firstName" => "Firstname empty",
             "lastName" => "Lastname empty",
@@ -65,6 +77,6 @@ class UserTest extends TestCase
             "birthdate" => "User to young"
         ];
 
-        $this->assertEquals($errorsExpected, $invalidUser->isValid());
+        $this->assertEquals($errorsExpected, $this->user->isValid());
     }
 }
