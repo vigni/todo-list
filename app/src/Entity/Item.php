@@ -6,9 +6,11 @@ use App\Repository\ItemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=ItemRepository::class)
+ * @ApiResource()
  */
 class Item
 {
@@ -26,7 +28,7 @@ class Item
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
@@ -37,11 +39,11 @@ class Item
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="items")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
-    public function __construct($name, $content)
+    public function __construct($name = "", $content = "")
     {
         $this->name = $name;
         $this->content = $content;

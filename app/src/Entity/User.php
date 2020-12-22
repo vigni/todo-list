@@ -9,10 +9,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\Types\Null_;
 use App\Service\EmailService;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
+ * @ApiResource(
+ *     collectionOperations={"get"={"normalization_context"={"groups"="conference:list"}}},
+ * )
  */
 class User
 {
@@ -184,6 +189,8 @@ class User
 
         if (!empty($errors)) {
             return $errors;
+        } else {
+            $item->setUser($this);
         }
 
         if ($this->getCountItems()  == 7) {
@@ -191,7 +198,7 @@ class User
             return $emailService->sendMail();
         }
 
-        return $this;
+        return $item;
     }
 
     public function removeItem(Item $item): self
