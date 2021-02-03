@@ -1,4 +1,5 @@
 <?php
+namespace App\tests\utils;
 
 use App\Entity\User;
 use App\Entity\Item;

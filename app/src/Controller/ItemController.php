@@ -8,9 +8,11 @@ use App\Form\ItemType;
 use App\Repository\ItemRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/item")
@@ -22,26 +24,29 @@ class ItemController extends AbstractController
      */
     public function index(ItemRepository $itemRepository): Response
     {
-        return $this->render('item/index.html.twig', [
-            'items' => $itemRepository->findAll(),
-        ]);
+
+        $items = $itemRepository->findAll();
+        $response = new JsonResponse();
+        $response->setData(count($items));
+        $response->setStatusCode(Response::HTTP_OK);
     }
 
     /**
      * @Route("/user/{id}/new", name="user_new_item_todolist", methods={"POST"})
      */
-    public function userNewItem(Request $request, $id, UserRepository $userRepo): Response
+    public function userNewItem(Request $request, $id, UserRepository $userRepo, ItemRepository $itemRepo, SerializerInterface $serializer): Response
     {
         $user = $userRepo->findOneBy(["id" => $id]);
-
-        $response = new Response();
+        $response = new JsonResponse();
+        $response->headers->set('Content-Type', 'application/json');
 
         if(!$user){
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $response->setContent("User doesn't exist !");
+            return $response;
         }
 
         $item = new Item();
-
 
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -58,12 +63,11 @@ class ItemController extends AbstractController
             $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
             $response->setContent(implode(", ", $addResp));
         } elseif(gettype($addResp) === "object") {
-            $response->setStatusCode(Response::HTTP_OK);
+            $response->setStatusCode(Response::HTTP_CREATED);
+            $response->setData($serializer->normalize($item, null));
         }
 
-        $response->send();
         return $response;
-
     }
 
     /**

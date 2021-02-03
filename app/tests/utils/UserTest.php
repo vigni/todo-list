@@ -1,7 +1,9 @@
 <?php
+namespace App\tests\utils;
 
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserTest extends TestCase
 {
@@ -10,7 +12,6 @@ class UserTest extends TestCase
     protected function setUp(): void 
     {
         $this->user = new User();
-
         $this->user->setFirstName("lucas")
             ->setLastName("vigni")
             ->setBirthdate(new \DateTime("1998-06-20"))
@@ -80,26 +81,5 @@ class UserTest extends TestCase
         $this->assertEquals($errorsExpected, $this->user->isValid());
     }
 
-    public function testPostNewUser()
-    {
-        $data = array
-        (
-            "firstName"=> "lucas",
-            "lastName"=> "vigni",
-            "birthdate"=> "1991-01-29T15",
-            "password"=> "password",
-            "email"=> "lvigni@gmail.com",
 
-        );
-
-        $this->postData($data, '/api/comments');
-        $response = $client->getResponse();
-        $this->assertStatusCodeResponse($response, 201);
-        $comment = json_decode($response->getContent(), true);
-
-        $this->assertArrayHasKey('id', $comment);
-        $this->assertArrayHasKey('movie_id', $comment);
-        $this->assertArrayHasKey('body', $comment);
-        $this->assertArrayNotHasKey('password', $comment['user']);
-    }
 }

@@ -1,4 +1,5 @@
 <?php
+namespace App\tests\utils;
 
 use App\Entity\Item;
 use PHPUnit\Framework\TestCase;
